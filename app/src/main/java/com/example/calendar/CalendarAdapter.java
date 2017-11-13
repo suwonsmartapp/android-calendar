@@ -1,16 +1,19 @@
 package com.example.calendar;
 
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.example.calendar.databinding.ItemCalendarBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,8 +22,6 @@ import java.util.Locale;
  */
 
 public class CalendarAdapter extends BaseAdapter {
-
-    private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM.dd", Locale.getDefault());
 
     private List<MyDate> mItems = new ArrayList<>();
 
@@ -72,29 +73,15 @@ public class CalendarAdapter extends BaseAdapter {
 
         holder.binding.setMyDate(myDate);
 
-//        if (myDate != null) {
-//            Calendar c = Calendar.getInstance();
-//            c.setTime(myDate.getDate());
-//
-//            holder.binding.dayTextView.setText("" + c.get(Calendar.DATE));
-//
-//            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); // 요일   (일요일 = 1, ~ 토요일 = 7)
-//            if (dayOfWeek == 7) {
-//                holder.date.setTextColor(Color.BLUE);
-//            } else if (dayOfWeek == 1) {
-//                holder.date.setTextColor(Color.RED);
-//            } else {
-//                holder.date.setTextColor(Color.BLACK);
-//            }
-//
-//            c.setTime(myDate.getLune());
-//            holder.lune.setText("" + mSimpleDateFormat.format(c.get(Calendar.DATE)));
-//
-//        } else {
-//            holder.date.setText("");
-//        }
-
         return convertView;
+    }
+
+    @BindingAdapter({"lune"})
+    public static void convertStringToLune(TextView view, Date date) {
+        if (date != null) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd", Locale.getDefault());
+            view.setText(simpleDateFormat.format(date));
+        }
     }
 
     public void updateItems(List<MyDate> items) {
