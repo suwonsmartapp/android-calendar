@@ -1,11 +1,12 @@
 package com.example.calendar;
 
-import android.graphics.Color;
+import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
+
+import com.example.calendar.databinding.ItemCalendarBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,12 +60,8 @@ public class CalendarAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            holder = new ViewHolder();
-
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_calendar, parent, false);
-
-            holder.date = convertView.findViewById(R.id.day_text_view);
-            holder.lune = convertView.findViewById(R.id.lune_text_view);
+            holder = new ViewHolder(convertView);
 
             convertView.setTag(holder);
         } else {
@@ -73,27 +70,29 @@ public class CalendarAdapter extends BaseAdapter {
 
         MyDate myDate = mItems.get(position);
 
-        if (myDate != null) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(myDate.getDate());
+        holder.binding.setMyDate(myDate);
 
-            holder.date.setText("" + c.get(Calendar.DATE));
-
-            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); // 요일   (일요일 = 1, ~ 토요일 = 7)
-            if (dayOfWeek == 7) {
-                holder.date.setTextColor(Color.BLUE);
-            } else if (dayOfWeek == 1) {
-                holder.date.setTextColor(Color.RED);
-            } else {
-                holder.date.setTextColor(Color.BLACK);
-            }
-
-            c.setTime(myDate.getLune());
-            holder.lune.setText("" + mSimpleDateFormat.format(c.get(Calendar.DATE)));
-
-        } else {
-            holder.date.setText("");
-        }
+//        if (myDate != null) {
+//            Calendar c = Calendar.getInstance();
+//            c.setTime(myDate.getDate());
+//
+//            holder.binding.dayTextView.setText("" + c.get(Calendar.DATE));
+//
+//            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); // 요일   (일요일 = 1, ~ 토요일 = 7)
+//            if (dayOfWeek == 7) {
+//                holder.date.setTextColor(Color.BLUE);
+//            } else if (dayOfWeek == 1) {
+//                holder.date.setTextColor(Color.RED);
+//            } else {
+//                holder.date.setTextColor(Color.BLACK);
+//            }
+//
+//            c.setTime(myDate.getLune());
+//            holder.lune.setText("" + mSimpleDateFormat.format(c.get(Calendar.DATE)));
+//
+//        } else {
+//            holder.date.setText("");
+//        }
 
         return convertView;
     }
@@ -103,7 +102,10 @@ public class CalendarAdapter extends BaseAdapter {
     }
 
     private static class ViewHolder {
-        TextView date;
-        TextView lune;
+        ItemCalendarBinding binding;
+
+        public ViewHolder(View view) {
+            binding = DataBindingUtil.bind(view);
+        }
     }
 }
