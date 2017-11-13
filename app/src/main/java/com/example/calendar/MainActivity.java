@@ -1,39 +1,39 @@
 package com.example.calendar;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.GridView;
 
-import java.util.Calendar;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private Calendar mCalendar;
+
+    private MainViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         // 지금
-        mCalendar = Calendar.getInstance();
         setUpAdapter();
     }
 
     public void prevMonth(View view) {
-        mCalendar.add(Calendar.MONTH, -1);
+        mViewModel.prevMonth();
         setUpAdapter();
     }
 
     public void nextMonth(View view) {
-        mCalendar.add(Calendar.MONTH, 1);
+        mViewModel.nextMonth();
         setUpAdapter();
     }
 
     private void setUpAdapter() {
-        CalendarAdapter adapter = new CalendarAdapter(mCalendar);
+        CalendarAdapter adapter = new CalendarAdapter(mViewModel.getCalendar());
 
         GridView gridView = findViewById(R.id.grid_view);
         gridView.setAdapter(adapter);
